@@ -9,6 +9,8 @@
 <script src="https://unpkg.com/supersimpledev/react.js"></script>
 <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
 
+<script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
 <script src="https://unpkg.com/supersimpledev/babel.js"></script>
 <script type="text/babel">
 
@@ -20,14 +22,31 @@
         }
 
         function sendMessage() {
-            setChatMessages([
+            const newChatMessages = [
                 ...chatMessages,
                 {
-                    message: 'test',
+                    message: inputText,
                     sender: 'user',
                     id: crypto.randomUUID()
                 }
+            ]
+
+            setChatMessages(newChatMessages);
+            // chatMessage is not updated the array immediately,we can't see our message
+
+            // Using chatbot external library to get response
+            const response = Chatbot.getResponse(inputText);
+            // console.log(response);
+            setChatMessages([
+                ...newChatMessages,
+                {
+                    message: response,
+                    sender: 'robot',
+                    id: crypto.randomUUID()
+                }
             ]);
+
+            setInputText(""); // update the InputText to be empty after typing the message,instead of manually removing the text in input
         }
 
         // when onChange runs the functions it gives a parameter called event,
@@ -35,12 +54,14 @@
         // console.log(event.target.value);
         // State = save data that changes over time
         // We should mention the initial value in React.useState()
+        // value change the text inside this <input>,makes the text box empty,this is called controlled input
         return (
             <>
                 <input
                     placeholder="Send a message to Chatbot"
                     size="30"
                     onChange={saveInputText}
+                    value={inputText}
                 />
                 <button
                     onClick={sendMessage}
