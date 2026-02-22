@@ -12,14 +12,39 @@
 <script src="https://unpkg.com/supersimpledev/babel.js"></script>
 <script type="text/babel">
 
-    function ChatInput() {
+    function ChatInput({ chatMessages, setChatMessages }) {
+        const [inputText, setInputText] = React.useState(""); // inputText contains the current text,setInputText is the updater function
+
+        function saveInputText(event) {
+            setInputText(event.target.value);
+        }
+
+        function sendMessage() {
+            setChatMessages([
+                ...chatMessages,
+                {
+                    message: 'test',
+                    sender: 'user',
+                    id: crypto.randomUUID()
+                }
+            ]);
+        }
+
+        // when onChange runs the functions it gives a parameter called event,
+        // it is an object, contains info about change
+        // console.log(event.target.value);
+        // State = save data that changes over time
+        // We should mention the initial value in React.useState()
         return (
             <>
                 <input
                     placeholder="Send a message to Chatbot"
                     size="30"
+                    onChange={saveInputText}
                 />
-                <button>Send</button>
+                <button
+                    onClick={sendMessage}
+                >Send</button>
             </>
         );
     }
@@ -54,8 +79,24 @@
         );
     }
 
-    function ChatMessages() {
-       const [chatMessages, setChatMessages] = React.useState([{
+    function ChatMessages({ chatMessages }) {
+        return (
+            <>
+                {chatMessages.map((chatMessage) => {
+                    return (
+                        <ChatMessage
+                            message={chatMessage.message}
+                            sender={chatMessage.sender}
+                            key={chatMessage.id}
+                        />
+                    );
+                })}
+            </>
+        );
+    }
+
+    function App() {
+        const [chatMessages, setChatMessages] = React.useState([{
             message: 'hello chatbot',
             sender: 'user',
             id: 'id1'
@@ -78,44 +119,16 @@
         // const setChatMessages = array[1]; // The second value is a function that updates the data,naming is important starts with set,
         // we should always use the function setChatMessages to update the data also called Updater Function
         // setChatMessages replaces the entire chatMessages array with a new array,that's how it works,add a new chat message at the end
-        function sendMessage() {
-            setChatMessages([
-                ...chatMessages,
-                {
-                    message: 'test',
-                    sender: 'user',
-                    id: crypto.randomUUID()
-                }
-            ]);
-
-            // .push add a value at the end of the array chatMessages
-            // crypto.randomUUID(); generates a unique id string
-            // Convert chatMessages into state we can update the HTML and can see changes in the web
-            // ... is a Spread Operator=takes the values in an array, and copies them into a new array
-        }
 
         return (
             <>
-                <button onClick={sendMessage}>Send Message</button>
-
-                {chatMessages.map((chatMessage) => {
-                    return (
-                        <ChatMessage
-                            message={chatMessage.message}
-                            sender={chatMessage.sender}
-                            key={chatMessage.id}
-                        />
-                    );
-                })}
-            </>
-        );
-    }
-
-    function App() {
-        return (
-            <>
-                <ChatInput/>
-                <ChatMessages />
+                <ChatInput
+                    chatMessages={chatMessages}
+                    setChatMessages={setChatMessages}
+                />
+                <ChatMessages
+                    chatMessages={chatMessages}
+                />
             </>
         );
     }
@@ -130,3 +143,7 @@
 <!--Props makes components reusable-->
 <!--Use a component(App) to create the website-->
 <!--State=data that is connected to the HTML,When we update this data,it will update the HTML-->
+<!--// .push add a value at the end of the array chatMessages-->
+<!--// crypto.randomUUID(); generates a unique id string-->
+<!--// Convert chatMessages into state we can update the HTML and can see changes in the web-->
+<!--// ... is a Spread Operator=takes the values in an array, and copies them into a new array-->
