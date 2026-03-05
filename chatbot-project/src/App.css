@@ -1,0 +1,14 @@
+.app-container {
+  max-width: 600px; /*Maximum width an element is allowed to grow to,This allows our app to grow until certain pixels*/
+  margin-left : auto;
+  margin-right: auto;
+  height: 100vh;   /*Stretching the App component to the bottom. vh means viewport height(the height of the browser),100vh means 100% of the height of the browser*/
+  display: flex;
+  flex-direction: column;
+  /*margin-left and margin-right are set to auto then the item is horizontally centered*/
+  /*flex-grow makes an element grow and take up the remaining space*/
+}
+
+/*When a block element is inside a flexbox,it no longer takes up the entire line,it only takes as much space as it needs to*/
+/*Main axis is Horizontal,Cross axis is vertical,for Main axis we use justify-content ans for cross axis we use align-items*/
+/*Element inside a flexbox stretch vertically,the image stretches,to fix this we use align-items,set to start by default they set to stretch*/
